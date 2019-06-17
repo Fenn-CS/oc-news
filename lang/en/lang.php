@@ -2,9 +2,9 @@
 
 return [
     'plugin' => [
-        'name' => 'News and Newsletter',
+        'name' => 'News & Newsletter',
         'description' => 'Simple news and newsletter plugin.',
-        'author' => 'Gergő Szabó',
+        'author' => 'Gergő Szabó'
     ],
     'menu' => [
         'news' => 'News',
@@ -61,6 +61,9 @@ return [
         'content' => 'Content',
         'image' => 'Image',
         'category' => 'Category',
+        'tags' => 'Tags',
+        'author' => 'Author',
+        'select_user' => '-- select user --',
         'status' => 'Status',
         'status_published' => 'Published',
         'status_hide' => 'Hidden',
@@ -84,10 +87,14 @@ return [
         'newsletter_content' => 'Newsletter email content',
         'enable_newsletter_content' => 'Enable newsletter email content',
         'enable_newsletter_content_description' => 'When this is enabled, the content for the email will be replaced with this textarea. Otherwise the content of the news will be taken.',
+        'seo_tab' => 'SEO settings',
+        'seo_title' => 'Title',
+        'seo_keywords' => 'Keywords',
+        'seo_desc' => 'Description',
+        'seo_image' => 'OG image',
         // Subscribers
         'name' => 'Name',
         'email' => 'E-mail',
-        'categories_comment' => 'If no category is selected then the subscriber will receive the all newsletters.',
         'comment' => 'Comment',
         'locale' => 'Locale',
         'locale_comment' => '<a href="https://en.wikipedia.org/wiki/ISO_3166-1" target="_blank">View the country codes</a>',
@@ -160,12 +167,13 @@ return [
         'newsletter_double_opt_in' => 'Newsletter registration confirmation',
         'newsletter_double_opt_in_comment' => 'Sends an email to the new subscriber which has to confirm his email address',
         'admin_section' => 'Settings of site administrators',
-        'show_posts' => 'Show the following post on front-end:',
+        'show_posts' => 'Show the following post on front-end as backend user:',
         'statistic_show_posts' => 'Show posts',
         'statistic_show_mails' => 'Show mail logs',
         'statistic_show_longest_posts' => 'Show longest posts',
         'statistic_show_shortest_posts' => 'Show shortest posts',
-        'statistic_comment' => 'In the Statistics page.'
+        'statistic_comment' => 'In the Statistics page.',
+        'extra_fields' => 'Extra fields for News form'
     ],
     'widget' => [
         'posts' => 'News - Posts',
@@ -235,7 +243,9 @@ return [
         'updated_at_asc' => 'Updated (ascending)',
         'updated_at_desc' => 'Updated (descending)',
         'published_at_asc' => 'Published (ascending)',
-        'published_at_desc' => 'Published (descending)'
+        'published_at_desc' => 'Published (descending)',
+        'statistics_asc' => 'Popularity (ascending)',
+        'statistics_desc' => 'Popularity (descending)'
     ],
     'sitemap' => [
         'post_list' => 'Post list',

@@ -5,8 +5,10 @@ Plugin is same like put together a blog and a newsletter plugin. The main differ
 
 - [Main features](#main_features)
 - [Statistics and graphs](#statistics)
+- [Advanced SEO support](#seo_support)
 - [Automatic statistics](#autostat)
 - [Preview feature](#preview)
+- [Quick navigation](#quick_navigation)
 - [Available widgets](#available_widgets)
 - [Available components](#available_components)
 - [HTML template variables](#html_template)
@@ -24,6 +26,7 @@ Plugin is same like put together a blog and a newsletter plugin. The main differ
 * Managing posts
 * Managing categories
 * Managing subscribers
+* Support the SEO
 * Support the GDPR
 * Export & Import data
 * Statistics and graphs
@@ -45,6 +48,15 @@ Plugin is same like put together a blog and a newsletter plugin. The main differ
 * Graph - Mail events
 * Graph - Mail summary
 
+<a name="seo_support"></a>
+## Advanced SEO support
+You can enabled this feature on the __Settings > CMS > News & Newsletter__ page. If you use it, you should replace the title and meta description tags with the following lines:
+```
+<title>{% if post.seo_title %}{{ post.seo_title }}{% elseif this.page.meta_title %}{{ this.page.meta_title }}{% else %}{{ this.page.title }}{% endif %}</title>
+<meta name="description" content="{% if post.seo_desc %}{{ post.seo_desc }}{% elseif this.page.meta_description %}{{ this.page.meta_description }}{% else %}{{ this.page.description }}{% endif %}">
+{% if post.seo_image %}<meta property="og:image" content="{{ post.seo_image|media }}">{% endif %}
+```
+
 <a name="autostat"></a>
 ## Automatic statistics
 You just add the "Post content" front-end component to the page, where the post appears. If you are logged in as administrator, the counter will not grow. It works any cases, when the visitors open the post details.
@@ -52,6 +64,10 @@ You just add the "Post content" front-end component to the page, where the post 
 <a name="preview"></a>
 ## Preview feature
 You just add the "Post content" front-end component to the current page. If you modify a news, the "Preview" link appears along the left of the delete icon. If you are logged in as administrator, you can read the hidden and draft news too.
+
+<a name="quick_navigation"></a>
+## Quick navigation
+If you modify any content, one or two arrows appear along the right of the delete icon. There are the navigation links. You can simply go to the previous or next content.
 
 <a name="available_widgets"></a>
 ## Available widgets
@@ -74,6 +90,7 @@ Use the __Components > News__ panel in CMS menu. At this moment there are the fo
 ## HTML template variables
 __For post__
 * {{ posts }} - List of posts in array
+* {{ posts.render|raw }} - Build-in pagination
 * {{ post.title }} - Title of post
 * {{ post.slug }} - Slug of post
 * {{ post.image|media }} - Full url of post image
@@ -81,8 +98,15 @@ __For post__
 * {{ post.content|raw }} - Content of post
 * {{ post.published_at }} - Published date of post
 * {{ post.category }} - ID of category (0: no category selected)
+* {{ post.tags }} - List of tags in array
+* {{ post.seo_title }} - SEO title
+* {{ post.seo_keywords }} - SEO keywords
+* {{ post.seo_desc }} - SEO description
+* {{ post.seo_image|media }} - Full url of image
 * {{ post.status }} - Status of post (1: published, 2: hide, 3: draft)
 * {{ post.featured }} - Is post featured? (1: yes, 2: no)
+* {{ post.next() }} - First post after current post
+* {{ post.prev() }} - Last post before current post
 
 __For category__
 * {{ categories }} - List of categories in array
@@ -93,6 +117,16 @@ __For category__
 * {{ category.status }} - Status of post (1: published, 2: hide)
 * {{ category.hidden }} - Is category hidden? (1: yes, 2: no)
 
+__For user (Backend User)__
+All attributes and methods available in `Backend\Models\User` are accesible via {{ post.user }}. Examples:
+
+* {{ post.user.first_name }} - Post author first name (attribute)
+* {{ post.user.email }} - Post author email (attribute)
+* {{ post.user.getFullNameAttribute }} - Post author full name (method)
+* {{ post.user.getAvatarThumb }} - Public path to author avatar (method)
+
+Checkout the `Backend\Models\User` interface and attributes for all possibilities.
+
 <a name="mail_template"></a>
 ## Mail template variables
 * {{ name }} - Name of subscriber
@@ -101,6 +135,7 @@ __For category__
 * {{ slug }} - Slug of post
 * {{ introductory }} - Introductory of post
 * {{ summary }} - Alias of introductory
+* {{ plaintext }} - Introductory without HTML elements
 * {{ content }} - Content of post
 * {{ image }} - Relative path of post image
 

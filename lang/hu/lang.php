@@ -61,6 +61,9 @@ return [
         'content' => 'Tartalom',
         'image' => 'Kép',
         'category' => 'Kategória',
+        'tags' => 'Címkék',
+        'author' => 'Szerző',
+        'select_user' => '-- válasszon felhasználót --',
         'status' => 'Státusz',
         'status_published' => 'Közzétéve',
         'status_hide' => 'Rejtett',
@@ -84,10 +87,14 @@ return [
         'newsletter_content' => 'Hírlevél tartalma',
         'enable_newsletter_content' => 'Funkció bekapcsolása',
         'enable_newsletter_content_description' => 'Engedélyezés esetén a hírlevél tartalma le fog cserélődni erre a szöveges részre.',
+        'seo_tab' => 'Keresőoptimalizálás',
+        'seo_title' => 'Cím',
+        'seo_keywords' => 'Kulcsszavak',
+        'seo_desc' => 'Leírás',
+        'seo_image' => 'OG kép',
         // Feliratkozók
         'name' => 'Név',
         'email' => 'E-mail',
-        'categories_comment' => 'Ha nincs kijelölve egyik kategória sem, akkor a feliratkozó minden hirlevelet meg fog kapni.',
         'comment' => 'Megjegyzés',
         'locale' => 'Nyelv',
         'locale_comment' => '<a href="https://hu.wikipedia.org/wiki/ISO_3166-1" target="_blank">Országkódok megtekintése</a>',
@@ -165,7 +172,8 @@ return [
         'statistic_show_mails' => 'Levél naplózás mutatása',
         'statistic_show_longest_posts' => 'Leghosszabb bejegyzések mutatása',
         'statistic_show_shortest_posts' => 'Legrövidebb bejegyzések mutatása',
-        'statistic_comment' => 'A Statisztika oldalon.'
+        'statistic_comment' => 'A Statisztika oldalon.',
+        'extra_fields' => 'Plusz mezők a hír adatlapon'
     ],
     'widget' => [
         'posts' => 'Hírek - Gyors statisztika',
@@ -235,7 +243,9 @@ return [
         'updated_at_asc' => 'Frissítve (növekvő)',
         'updated_at_desc' => 'Frissítve (csökkenő)',
         'published_at_asc' => 'Publikálva (növekvő)',
-        'published_at_desc' => 'Publikálva (csökkenő)'
+        'published_at_desc' => 'Publikálva (csökkenő)',
+        'statistics_asc' => 'Népszerűség (növekvő)',
+        'statistics_desc' => 'Népszerűség (csökkenő)'
     ],
     'sitemap' => [
         'post_list' => 'Bejegyzés lista',

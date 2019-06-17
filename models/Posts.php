@@ -5,9 +5,10 @@ use BackendAuth;
 use Carbon\Carbon;
 use Cms\Classes\Page as CmsPage;
 use Indikator\News\Models\Categories as NewsCategories;
-use Url;
-use App;
 use Db;
+use App;
+use Str;
+use Url;
 
 class Posts extends Model
 {
@@ -20,7 +21,7 @@ class Posts extends Model
 
     public $rules = [
         'title'    => 'required',
-        'slug'     => ['required', 'regex:/^[a-z0-9\/\:_\-\*\[\]\+\?\|]*$/i', 'unique:indikator_news_posts'],
+        'slug'     => ['regex:/^[a-z0-9\/\:_\-\*\[\]\+\?\|]*$/i', 'unique:indikator_news_posts'],
         'status'   => 'required|between:1,3|numeric',
         'featured' => 'required|between:1,2|numeric'
     ];
@@ -105,12 +106,37 @@ class Posts extends Model
     }
 
     /**
-     * Check the ID of category
+     * List of administrators
+     */
+    public function getUserOptions()
+    {
+        $result = [0 => 'indikator.news::lang.form.select_user'];
+        $users = Db::table('backend_users')->orderBy('login', 'asc')->get()->all();
+
+        foreach ($users as $user) {
+            $name = trim($user->first_name.' '.$user->last_name);
+            $name = ($name != '') ? ' ('.$name.')' : '';
+            $result[$user->id] = $user->login.$name;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check value of some fields
      */
     public function beforeSave()
     {
+        if (!isset($this->slug) || empty($this->slug)) {
+            $this->slug = Str::slug($this->title);
+        }
+
         if (!isset($this->category_id) || empty($this->category_id)) {
             $this->category_id = 0;
+        }
+
+        if (!isset($this->user_id) || empty($this->user_id)) {
+            $this->user_id = 0;
         }
 
         if ($this->status == 1 && empty($this->published_at)) {
@@ -128,24 +154,13 @@ class Posts extends Model
         }
     }
 
-    // Next / Previous
+    // Next and previous post
 
     /**
      * Apply a constraint to the query to find the nearest sibling
      *
-     *     // Get the next post
-     *     Post::applySibling()->first();
-     *
-     *     // Get the previous post
-     *     Post::applySibling(-1)->first();
-     *
-     *     // Get the previous post, ordered by the ID attribute instead
-     *     Post::applySibling(['direction' => -1, 'attribute' => 'id'])->first();
-     *
      * @param       $query
      * @param array $options
-     *
-     * @return
      */
     public function scopeApplySibling($query, $options = [])
     {
@@ -155,7 +170,7 @@ class Posts extends Model
 
         extract(array_merge([
             'direction' => 'next',
-            'attribute' => 'published_at',
+            'attribute' => 'published_at'
         ], $options));
 
         $isPrevious = in_array($direction, ['previous', -1]);
@@ -171,20 +186,22 @@ class Posts extends Model
 
     /**
      * Returns the next post, if available.
+     *
      * @return self
      */
     public function next()
     {
-        return self::isPublished()->applySibling()->first();
+        return self::isPublished()->applySibling(-1)->first();
     }
 
     /**
      * Returns the previous post, if available.
+     *
      * @return self
      */
     public function prev()
     {
-        return self::isPublished()->applySibling(-1)->first();
+        return self::isPublished()->applySibling()->first();
     }
 
     public function scopeListFrontEnd($query, $options)
@@ -254,7 +271,7 @@ class Posts extends Model
             $default_locale = Db::table('rainlab_translate_locales')->where('is_default', 1)->value('code');
 
             if ($current_locale != $default_locale) {
-                $ids = Db::table('rainlab_translate_attributes')->where('model_type', 'Indikator\News\Models\Posts')->where('locale', $current_locale)->where('attribute_data', 'not like', '%"title":""%')->value('model_id')->toArray();
+                $ids = Db::table('rainlab_translate_attributes')->where('model_type', 'Indikator\News\Models\Posts')->where('locale', $current_locale)->where('attribute_data', 'not like', '%"title":""%')->pluck('model_id');
                 $query->whereIn('id', $ids);
             }
         }
@@ -389,7 +406,7 @@ class Posts extends Model
         }
 
         $properties = $page->getComponentProperties('newsPost');
-        if (!preg_match('/^\{\{([^\}]+)\}\}$/', $properties['slug'], $matches)) {
+        if (!array_key_exists('slug', $properties) || !preg_match('/^\{\{([^\}]+)\}\}$/', $properties['slug'], $matches)) {
             return;
         }
 
